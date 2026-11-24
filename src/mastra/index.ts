@@ -1,40 +1,40 @@
-import { Mastra } from '@mastra/core/mastra';
-import { LibSQLStore } from '@mastra/libsql';
-import { DuckDBStore } from '@mastra/duckdb';
-import { MastraCompositeStore } from '@mastra/core/storage';
-import {
-  MastraStorageExporter,
-  MastraPlatformExporter,
-  Observability,
-  SensitiveDataFilter,
-} from '@mastra/observability';
-import { agent } from './agents/agent';
-import { startScheduleTool, stopScheduleTool } from './tools/schedule-tools';
+import { Mastra } from "@mastra/core/mastra";
+import { askUserTool } from "@mastra/core/tools";
+
+import { agent } from "./agents/agent";
+import { judge } from "./agents/judge";
+import { modeller } from "./agents/modeller";
+import { publicAgent } from "./agents/public";
+import { researcher } from "./agents/researcher";
+import { storage } from "./storage";
+import { chatgptTools } from "./tools/chatgpt";
+import { directions } from "./tools/directions";
+import { googleTools } from "./tools/google";
+import { outlineTools } from "./tools/outline";
+import { manageJobs, profile } from "./tools/personal";
+import { todoistTools } from "./tools/todoist";
+import { weather } from "./tools/weather";
+import { webSearch } from "./tools/web";
 
 export const mastra = new Mastra({
-  bundler: {
-    externals: ['@duckdb/node-bindings'],
+  agents: { agent, judge, researcher, modeller, publicAgent },
+  tools: {
+    directions,
+    ask_user: askUserTool,
+    web_search: webSearch,
+    weather,
+    manage_jobs: manageJobs,
+    profile,
+    ...chatgptTools,
+    ...outlineTools,
+    ...todoistTools,
+    ...googleTools,
   },
-  agents: { agent },
-  tools: { startScheduleTool, stopScheduleTool },
-  storage: new MastraCompositeStore({
-    id: 'composite-storage',
-    default: new LibSQLStore({
-      id: 'mastra-storage',
-      url: process.env.TURSO_DATABASE_URL || 'file:./mastra.db',
-      authToken: process.env.TURSO_AUTH_TOKEN || undefined,
-    }),
-    domains: {
-      observability: await new DuckDBStore().getStore('observability'),
-    },
-  }),
-  observability: new Observability({
-    configs: {
-      default: {
-        serviceName: 'mastra',
-        exporters: [new MastraStorageExporter(), new MastraPlatformExporter()],
-        spanOutputProcessors: [new SensitiveDataFilter()],
-      },
-    },
-  }),
+  backgroundTasks: {
+    enabled: true,
+    globalConcurrency: 2,
+    perAgentConcurrency: 2,
+    backpressure: "queue",
+  },
+  storage,
 });

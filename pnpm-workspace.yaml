@@ -1,9 +1,10 @@
 packages:
-  - '.'
+  - "."
 minimumReleaseAgeExclude:
   - mastra
   - "@mastra/*"
 allowBuilds:
+  "@google/genai": false
   bufferutil: true
   esbuild: true
   protobufjs: true

@@ -1,32 +1,51 @@
 {
   "name": "flora",
   "version": "1.0.0",
-  "description": "A general-purpose Mastra agent with a local workspace, shell tools, memory, task tracking, web access, and recurring schedules.",
-  "main": "index.js",
   "private": true,
-  "scripts": {
-    "dev": "mastra dev",
-    "build": "mastra build",
-    "start": "mastra start"
-  },
-  "keywords": [],
-  "author": "",
+  "description": "A personal Discord bot using Mastra and Codex subscription OAuth.",
   "license": "Apache-2.0",
   "type": "module",
-  "engines": {
-    "node": ">=22.13.0"
+  "scripts": {
+    "codex:login": "tsx --env-file-if-exists=.env src/codex-login.ts",
+    "google:login": "tsx --env-file-if-exists=.env src/google-login.ts",
+    "todoist:login": "tsx --env-file-if-exists=.env src/todoist-login.ts",
+    "dev": "mastra dev",
+    "build": "mastra build",
+    "start": "mastra start",
+    "bot:dev": "tsx watch --env-file-if-exists=.env src/discord/index.ts",
+    "bot:start": "tsx --env-file-if-exists=.env src/discord/index.ts",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check ."
   },
   "dependencies": {
+    "@ai-sdk/openai": "4.0.91",
+    "@googleapis/calendar": "^20.1.0",
+    "@googleapis/gmail": "^22.0.1",
     "@mastra/core": "1.74.0",
-    "@mastra/duckdb": "1.12.1",
     "@mastra/libsql": "1.25.0",
+    "@mastra/mcp": "2.1.2",
     "@mastra/memory": "1.35.0",
-    "@mastra/observability": "1.18.3",
-    "zod": "^4.4.3"
+    "@sapphire/framework": "^5.5.1",
+    "ai": "7.0.137",
+    "cron-parser": "^5.10.1",
+    "discord.js": "^14.27.0",
+    "google-auth-library": "^11.1.0",
+    "proper-lockfile": "^4.1.2",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@oxlint/plugins": "1.86.0",
     "@types/node": "latest",
+    "@types/proper-lockfile": "^4.1.4",
     "mastra": "1.32.1",
+    "oxfmt": "0.71.0",
+    "oxlint": "1.86.0",
     "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=22.13.0"
   }
 }

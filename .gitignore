@@ -8,7 +8,10 @@ src/mastra/public/
 .env.local
 *.db
 *.db-*
+.flora/
 .netlify
 .vercel
 *.duckdb
 *.duckdb.wal
+.DS_Store
+*.log

@@ -1,0 +1,41 @@
+services:
+  flora:
+    image: flora:local
+    build: .
+    init: true
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      FLORA_PUBLIC_URL: ${FLORA_PUBLIC_URL:?Set FLORA_PUBLIC_URL to your tunnel HTTPS origin}
+      FLORA_DATABASE_URL: file:/data/mastra.db
+      FLORA_ATTACHMENTS_DIR: /data/attachments
+      CODEX_AUTH_FILE: /data/oauth.json
+      FLORA_OAUTH_PORT: "8080"
+    volumes:
+      - flora-data:/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8080/healthz').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    stop_grace_period: 30s
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    restart: unless-stopped
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:?Set CLOUDFLARE_TUNNEL_TOKEN for your remotely managed tunnel}
+    depends_on:
+      flora:
+        condition: service_healthy
+
+volumes:
+  flora-data:

@@ -1,0 +1,17 @@
+.git
+node_modules
+.pnpm-store
+.mastra
+.flora
+.env
+.env.*
+*.db
+*.db-*
+*.duckdb
+*.duckdb.*
+*.log
+dist
+.claude
+.agents
+.pi
+oxlint

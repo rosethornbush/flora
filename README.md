@@ -83,7 +83,7 @@ Google refresh tokens persist in SQLite; the SDK refreshes access tokens automat
 
 ## VPS with Docker
 
-The multi-stage `Dockerfile` runs Node 24 Alpine as a non-root user. Only production dependencies enter the final image; pnpm and development tools stay in the build stage. `ffmpeg` supports voice messages, and timezone data supports configured local times.
+The multi-stage `Dockerfile` runs Node 24 Alpine as a non-root user. Only production dependencies enter the final image; pnpm and development tools stay in the build stage. The tsx CLI starts the bot so Sapphire discovers TypeScript commands, listeners and interaction handlers. `ffmpeg` supports voice messages, and timezone data supports configured local times.
 
 1. Copy `.env.example` to `.env` and set the Discord credentials and Google client credentials.
 2. Create a [remotely managed Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/). Put its token in `CLOUDFLARE_TUNNEL_TOKEN`.

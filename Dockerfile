@@ -21,4 +21,4 @@ ENV NODE_ENV=production \
     FLORA_OAUTH_PORT=8080
 USER node
 EXPOSE 8080
-CMD ["node", "--import", "tsx", "src/discord/index.ts"]
+CMD ["./node_modules/.bin/tsx", "src/discord/index.ts"]
